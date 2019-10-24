@@ -12,7 +12,9 @@ from __flowers__ import *
 
 def create_tab():
 
-	df = pd.read_csv('data.csv', dtype={'yyyymm':'str', 'yyyymmdd':'str'})
+	#df = pd.read_csv('data.csv', dtype={'yyyymm':'str', 'yyyymmdd':'str'})
+	d = {'yyyymm': ['201910','201910'], 'yyyymmdd': ['20191022','20191023'], 'nbr_tables':[6,6], 'nbr_rows':[3020,3071]}
+	df = pd.DataFrame(data=d)
 	
 	o_tbl, o_chk = TableWithDropDown(df, 'yyyymm', {'height':400, 'width':800, 'default':'201910'}).create_widgets()	
 	o_layout = column(o_chk, o_tbl)
