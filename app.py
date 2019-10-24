@@ -15,9 +15,9 @@ def create_tab_one():
 
 	##### import data
 
-	df1 = pd.read_csv('/data/data1.csv')
-	df2 = pd.read_csv('/data/data2.csv')
-	df3 = pd.read_csv('/data/data3.csv', dtype={'yyyymmdd':'str'})
+	df1 = pd.read_csv('data/data1.csv')
+	df2 = pd.read_csv('data/data2.csv')
+	df3 = pd.read_csv('data/data3.csv', dtype={'yyyymmdd':'str'})
 
 	##### define last day
 
