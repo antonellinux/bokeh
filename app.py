@@ -43,7 +43,7 @@ def create_tab_two():
 
 	##### import data
 
-	df4 = pd.read_csv(path + '\\data4.csv', dtype={'yyyymmdd':'str'})	
+	df4 = pd.read_csv('data/data4.csv', dtype={'yyyymmdd':'str'})	
 	df4_sub = df4[df4['to_ccy'].isin(['EUR', 'USD', 'AUD', 'NZD', 'CHF', 'CAD'])]
 
 	##### create objects
