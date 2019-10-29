@@ -66,7 +66,7 @@ def create_tab_three():
 	s_max_day = df5['yyyymmdd'].max()
 	del(df5['yyyymmdd'])
 	
-	df6 = pd.read_csv(path + '\\data6.csv', dtype={'yyyymmdd':'str'})
+	df6 = pd.read_csv('data/data6.csv', dtype={'yyyymmdd':'str'})
 	
 	##### create objects
 
