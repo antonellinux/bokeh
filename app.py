@@ -11,6 +11,8 @@ from __flowers__ import *
 # CREATE TABS
 # ======================================================================
 
+o_div_logo = Div(text="<p><img src = 'https://www.localpensionspartnership.org.uk/Files/Templates/Designs/BasicDesign/images/LPP_logo.svg' height = 40 width = 120></p>")
+
 def create_tab_one():
 
 	##### import data
@@ -25,16 +27,16 @@ def create_tab_one():
 
 	##### create objects
 
-	params = {'height':400, 'width':800, 'barwidth':0.7, 'title':'Region weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
+	params = {'height':370, 'width':800, 'barwidth':0.7, 'title':'Region weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
 	o_plot1, o_drop1 = BarPlotWithDropDown(df1, 'region', 'weight', 'portfolio_name', params, False).create_widgets()
 
-	params = {'height':400, 'width':800, 'barwidth':0.7, 'title':'Sector weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
+	params = {'height':370, 'width':800, 'barwidth':0.7, 'title':'Sector weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
 	o_plot2, o_drop2 = BarPlotWithDropDown(df2, 'sector_name', 'weight', 'portfolio_name', params, False).create_widgets()
 
-	params = {'height':840, 'width':800, 'barwidth':0.7, 'title':'Portolios weight by region', 'default':s_max_day}
+	params = {'height':780, 'width':800, 'barwidth':0.7, 'title':'Portolios weight by region', 'default':s_max_day}
 	o_plot3, o_drop3 = MultiBarPlotWithDropDown(df3, ['region', 'portfolio_name'], 'weight', 'yyyymmdd', params, False).create_widgets()
 	
-	o_layout = row(column(column(o_drop1, o_plot1), column(o_drop2, o_plot2)), column(o_drop3, o_plot3)) 
+	o_layout = column(o_div_logo, row(column(column(o_drop1, o_plot1), column(o_drop2, o_plot2)), column(o_drop3, o_plot3)))  
 
 	return Panel(child = o_layout, title = 'Segments')		
 
@@ -51,7 +53,7 @@ def create_tab_two():
 	o_plot1, o_dd1 = TimeSeriesPlotWithDropDown(df4, 'yyyymmdd', 'fx_rate', 'to_ccy', {'height':400, 'width':800, 'title':'FxRate vs GBP', 'default':'USD'}, True).create_widgets()	
 	o_plot2 = TimeSeriesPlot(df4_sub, 'yyyymmdd', 'fx_rate', 'to_ccy', {'height':440, 'width':800, 'title':'FxRate (AUD-CAD-CHF-EUR-NZD-USD)'}, True).create_plot()
 
-	o_layout = row(column(o_dd1, o_plot1), o_plot2)
+	o_layout = column(o_div_logo, row(column(o_dd1, o_plot1), o_plot2))
 
 	return Panel(child = o_layout, title = 'FX Rates')
 
@@ -71,8 +73,8 @@ def create_tab_three():
 	s_txt = "<b>Top 10 Stocks by portfolio (data @: " + str(s_max_day) + ") </b>"
 	o_div = Div(text=s_txt, style={'font-size': '100%'})
 
-	o_layout = column(o_div, o_chk, o_tbl)
-
+	o_layout = column(o_div_logo, o_div, o_chk, o_tbl)
+	
 	return Panel(child = o_layout, title = 'Stocks')
 
 # ======================================================================
