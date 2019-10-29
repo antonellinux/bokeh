@@ -241,6 +241,7 @@ class TimeSeriesPlotWithDropDown( object ):
 		TOOLTIPS = [("value", "$y")]
 		o_plot = figure(x_axis_type='datetime', width=self.params['width'], height=self.params['height'], title=self.params['title'], tooltips=TOOLTIPS, toolbar_location=None)
 		o_plot.line(x=self.s_col_time, y=self.s_col_values, source=o_source)
+		o_plot.ygrid.grid_line_color = None
 
 		########## create dropdown
 
@@ -311,7 +312,8 @@ class TimeSeriesPlot( object ):
 		TOOLTIPS = [("item", "@labels"), ("value", "$y")]		
 		o_wdg_plot = figure(width = self.params['width'], height = self.params['height'], x_axis_type = 'datetime', y_axis_type = 'linear', tooltips = TOOLTIPS, toolbar_location = None, title = self.params['title'])			
 		o_wdg_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal')#, legend = 'labels')
-
+		o_wdg_plot.ygrid.grid_line_color = None
+		
 		return o_wdg_plot
 
 # ======================================================================
