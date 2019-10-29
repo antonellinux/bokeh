@@ -196,6 +196,60 @@ class TimeSeriesPlotWithCheckGroup( object ):
 
 		return o_wdg_plot, o_wdg_check
 
+
+# ======================================================================
+# TIMESERIES PLOT WITH DROPDOWN
+# ======================================================================
+
+class TimeSeriesPlotWithDropDown( object ):
+
+	"""
+	df_data = data frame with the data for building the plot
+	s_col_time = name of the column with the time values 
+	s_col_values = name of the column with values to plot
+	s_col_labels = name of the column with labels used by the CheckGroup for subsetting
+	params = dictionary with width/height/title/default value of the plot
+	b_yyyymmdd_to_time = True when the time column appears with format yyyymmdd	
+	"""
+
+	def __init__( self, df_data, s_col_time, s_col_values, s_col_labels, params, b_yyyymmdd_to_time=False ):
+
+		self.df_data = df_data
+		self.s_col_time = s_col_time		
+		self.s_col_values = s_col_values
+		self.s_col_labels = s_col_labels
+		self.params = params
+		self.b_yyyymmdd_to_time = b_yyyymmdd_to_time
+		
+
+	def create_widgets( self ):			
+
+		def callback( attr, old, new ):
+
+			df_sub_data = self.df_data[self.df_data[self.s_col_labels] == o_dd.value]						
+			o_source_sub = ColumnDataSource(df_sub_data)
+			o_source.data = o_source_sub.data						
+
+		########## create plot
+
+		if self.b_yyyymmdd_to_time == True:			
+			self.df_data[self.s_col_time] = pd.to_datetime(self.df_data[self.s_col_time])
+
+		df_start = self.df_data[self.df_data[self.s_col_labels] == self.params['default']]
+		o_source = ColumnDataSource(df_start)
+
+		TOOLTIPS = [("value", "$y")]
+		o_plot = figure(x_axis_type='datetime', width=self.params['width'], height=self.params['height'], title=self.params['title'], tooltips=TOOLTIPS, toolbar_location=None)
+		o_plot.line(x=self.s_col_time, y=self.s_col_values, source=o_source)
+
+		########## create dropdown
+
+		l_labels = list(self.df_data[self.s_col_labels].unique()) 		
+		o_dd = Select(value=self.params['default'], options=l_labels)
+		o_dd.on_change('value', callback)	
+
+		return o_plot, o_dd
+
 # ======================================================================
 # TIMESERIES PLOT (AND NOTHING ELSE)
 # ======================================================================		
