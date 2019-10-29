@@ -7,7 +7,7 @@ import pandas as pd
 from bokeh.io import curdoc
 from bokeh.client import push_session
 from bokeh.models import ColumnDataSource, Panel, HoverTool, NumeralTickFormatter, CustomJS
-from bokeh.models.widgets import TableColumn, DataTable, CheckboxGroup, Tabs, Select, Button
+from bokeh.models.widgets import TableColumn, DataTable, CheckboxGroup, Tabs, Select, Button, Div
 from bokeh.plotting import figure
 from bokeh.palettes import Category20, Category20b, Category20c
 from bokeh.layouts import column, row
