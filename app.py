@@ -38,10 +38,29 @@ def create_tab_one():
 
 	return Panel(child = o_layout, title = 'Segments')		
 
+
+def create_tab_two():
+
+	##### import data
+
+	df4 = pd.read_csv(path + '\\data4.csv', dtype={'yyyymmdd':'str'})	
+	df4_sub = df4[df4['to_ccy'].isin(['EUR', 'USD', 'AUD', 'NZD', 'CHF', 'CAD'])]
+
+	##### create objects
+
+	o_plot1, o_dd1 = TimeSeriesPlotWithDropDown(df4, 'yyyymmdd', 'fx_rate', 'to_ccy', {'height':400, 'width':800, 'title':'FxRate vs GBP', 'default':'USD'}, True).create_widgets()	
+	o_plot2 = TimeSeriesPlot(df4_sub, 'yyyymmdd', 'fx_rate', 'to_ccy', {'height':440, 'width':800, 'title':'FxRate (AUD-CAD-CHF-EUR-NZD-USD)'}, True).create_plot()
+
+	o_layout = row(column(o_dd1, o_plot1), o_plot2)
+
+	return Panel(child = o_layout, title = 'FX Rates')
+
 # ======================================================================
 # WRAP UP
 # ======================================================================
 
-o_tab = create_tab_one()
-o_tabs = Tabs(tabs = [o_tab])
+o_tab1 = create_tab_one()
+o_tab2 = create_tab_two()
+
+o_tabs = Tabs(tabs = [o_tab1, o_tab2])
 curdoc().add_root(o_tabs)
