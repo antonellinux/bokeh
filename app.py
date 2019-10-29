@@ -61,12 +61,15 @@ def create_tab_three():
 	##### import data
 	
 	df5 = pd.read_csv('data/data5.csv')		
+	s_max_day = df5['yyyymmdd'].max()
+	del(df5['yyyymmdd'])
 	
 	##### create objects
 
 	df5.sort_values(by=['portfolio_name', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
 	o_tbl, o_chk = TableWithDropDown(df5, 'portfolio_name', {'height':400, 'width':800, 'default':'OVERALL', 'title':'Top 10 Stocks by portfolio'}).create_widgets()
-	o_div = Div(text="<b>Top 10 Stocks by portfolio</b>", style={'font-size': '100%'})
+	s_txt = "<b>Top 10 Stocks by portfolio (data @: " + str(s_max_day) + ") </b>"
+	o_div = Div(text=s_txt, style={'font-size': '100%'})
 
 	o_layout = column(o_div, o_chk, o_tbl)
 
