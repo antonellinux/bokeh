@@ -66,15 +66,20 @@ def create_tab_three():
 	s_max_day = df5['yyyymmdd'].max()
 	del(df5['yyyymmdd'])
 	
+	df6 = pd.read_csv(path + '\\data6.csv', dtype={'yyyymmdd':'str'})
+	
 	##### create objects
 
 	df5.sort_values(by=['portfolio_name', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
-	o_tbl, o_chk = TableWithDropDown(df5, 'portfolio_name', {'height':400, 'width':800, 'default':'OVERALL', 'title':'Top 10 Stocks by portfolio'}).create_widgets()
-	s_txt = "<b>Top 10 Stocks by portfolio (data @: " + str(s_max_day) + ") </b>"
-	o_div = Div(text=s_txt, style={'font-size': '100%'})
-
-	o_layout = column(o_div_logo, o_div, o_chk, o_tbl)
+	o_tbl1, o_chk1 = TableWithDropDown(df5, 'portfolio_name', {'height':400, 'width':800, 'default':'OVERALL'}).create_widgets()	
+	o_div1 = Div(text="<b>Top 10 Stocks by portfolio (data @: " + str(s_max_day) + ") </b>", style={'font-size': '100%'})
 	
+	df6.sort_values(by=['yyyymmdd', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
+	o_tbl2, o_chk2 = TableWithDropDown(df6, 'yyyymmdd', {'height':400, 'width':800, 'default':str(s_max_day)}).create_widgets()	
+	o_div2 = Div(text="<b>Top 10 Stocks by day</b>", style={'font-size': '100%'})
+
+	o_layout = column(o_div_logo, row(column(o_div1, o_chk1, o_tbl1), column(o_div2, o_chk2, o_tbl2)))
+
 	return Panel(child = o_layout, title = 'Stocks')
 
 # ======================================================================
