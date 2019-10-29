@@ -55,12 +55,30 @@ def create_tab_two():
 
 	return Panel(child = o_layout, title = 'FX Rates')
 
+
+def create_tab_three():
+
+	##### import data
+	
+	df5 = pd.read_csv('data/data5.csv')		
+	
+	##### create objects
+
+	df5.sort_values(by=['portfolio_name', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
+	o_tbl, o_chk = TableWithDropDown(df5, 'portfolio_name', {'height':400, 'width':800, 'default':'OVERALL', 'title':'Top 10 Stocks by portfolio'}).create_widgets()
+	o_div = Div(text="<b>Top 10 Stocks by portfolio</b>", style={'font-size': '100%'})
+
+	o_layout = column(o_div, o_chk, o_tbl)
+
+	return Panel(child = o_layout, title = 'Stocks')
+
 # ======================================================================
 # WRAP UP
 # ======================================================================
 
 o_tab1 = create_tab_one()
 o_tab2 = create_tab_two()
+o_tab3 = create_tab_three()
 
-o_tabs = Tabs(tabs = [o_tab1, o_tab2])
+o_tabs = Tabs(tabs = [o_tab1, o_tab2, o_tab3])
 curdoc().add_root(o_tabs)
