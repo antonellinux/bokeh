@@ -67,18 +67,26 @@ def create_tab_three():
 	del(df5['yyyymmdd'])
 	
 	df6 = pd.read_csv('data/data6.csv', dtype={'yyyymmdd':'str'})
+	df7 = pd.read_csv('data/data7.csv', dtype={'yyyymmdd':'str'})
 	
 	##### create objects
 
 	df5.sort_values(by=['portfolio_name', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
-	o_tbl1, o_chk1 = TableWithDropDown(df5, 'portfolio_name', {'height':400, 'width':800, 'default':'OVERALL'}).create_widgets()	
+	o_tbl1, o_chk1 = TableWithDropDown(df5, 'portfolio_name', {'height':280, 'width':800, 'default':'OVERALL'}).create_widgets()	
 	o_div1 = Div(text="<b>Top 10 Stocks by portfolio (data @: " + str(s_max_day) + ") </b>", style={'font-size': '100%'})
 	
 	df6.sort_values(by=['yyyymmdd', 'mkt_val_gbp'], ascending=[True, False], inplace=True)	
-	o_tbl2, o_chk2 = TableWithDropDown(df6, 'yyyymmdd', {'height':400, 'width':800, 'default':str(s_max_day)}).create_widgets()	
+	o_tbl2, o_chk2 = TableWithDropDown(df6, 'yyyymmdd', {'height':280, 'width':800, 'default':str(s_max_day)}).create_widgets()	
 	o_div2 = Div(text="<b>Top 10 Stocks by day</b>", style={'font-size': '100%'})
 
-	o_layout = column(o_div_logo, row(column(o_div1, o_chk1, o_tbl1), column(o_div2, o_chk2, o_tbl2)))
+	df7.sort_values(by=['stock_name', 'yyyymmdd'], ascending=[True, True], inplace=True)	
+	o_plot1, o_dd1 = TimeSeriesPlotWithDropDown(df7, 'yyyymmdd', 'close', 'stock_name', {'height':400, 'width':800, 'title':'Stock Quotes', 'default':'Accenture PLC'}, True).create_widgets()	
+
+	
+	df7_sub = df7.groupby('stock_name').tail(60)	
+	o_plot2, o_dd2 = TimeSeriesPlotWithDropDown(df7_sub, 'yyyymmdd', 'per_change', 'stock_name', {'height':400, 'width':800, 'title':'Last 60 days volatility', 'default':'Accenture PLC'}, True).create_widgets()	
+
+	o_layout = column(o_div_logo, row(column(o_div1, o_chk1, o_tbl1, o_dd1, o_plot1), column(o_div2, o_chk2, o_tbl2, o_dd2, o_plot2)))
 
 	return Panel(child = o_layout, title = 'Stocks')
 
