@@ -12,18 +12,18 @@ from __flowers__ import *
 
 o_div_logo = Div(text="<p><img src = 'https://www.localpensionspartnership.org.uk/Files/Templates/Designs/BasicDesign/images/LPP_logo.svg' height = 40 width = 120></p>")
 
-df1 = pd.read_csv('data/data1.csv')
-df2 = pd.read_csv('data/data2.csv')
-df3 = pd.read_csv('data/data3.csv', dtype={'yyyymmdd':'str'})
-
-s_max_day = df3['yyyymmdd'].max()
-
 # ======================================================================
 # CREATE TABS
 # ======================================================================
 
 def create_tab_one():		
 	
+	df1 = pd.read_csv('data/data1.csv')
+	df2 = pd.read_csv('data/data2.csv')
+	df3 = pd.read_csv('data/data3.csv', dtype={'yyyymmdd':'str'})
+
+	s_max_day = df3['yyyymmdd'].max()
+		
 	params = {'height':370, 'width':800, 'barwidth':0.7, 'title':'Region weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
 	o_plot1, o_drop1 = BarPlotWithDropDown(df1, 'region', 'weight', 'portfolio_name', params, False).create_widgets()
 
