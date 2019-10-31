@@ -97,7 +97,7 @@ def create_tab_four():
 o_tab1 = create_tab_one()
 o_tab2 = create_tab_two()
 o_tab3 = create_tab_three()
-o_tab4 = create_tab_four()
+#o_tab4 = create_tab_four()
 
-o_tabs = Tabs(tabs = [o_tab1, o_tab2, o_tab3, o_tab4])
+o_tabs = Tabs(tabs = [o_tab1, o_tab2, o_tab3])#, o_tab4])
 curdoc().add_root(o_tabs)
