@@ -23,9 +23,9 @@ o_div_logo = Div(text="<p><img src = 'https://www.localpensionspartnership.org.u
 
 def create_tab_one():		
 		
-	df1 = pd.read_csv('data/data1.csv')
-	df2 = pd.read_csv('data/data2.csv')
-	df3 = pd.read_csv('data/data3.csv', dtype={'yyyymmdd':'str'})
+	df1 = pd.read_csv('data1.csv')
+	df2 = pd.read_csv('data2.csv')
+	df3 = pd.read_csv('data3.csv', dtype={'yyyymmdd':'str'})
 	s_max_day = df3['yyyymmdd'].max()				
 		
 	params = {'height':370, 'width':800, 'barwidth':0.7, 'title':'Region weight (data @: ' + s_max_day + ')', 'default':'OVERALL'}
