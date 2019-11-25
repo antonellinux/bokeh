@@ -131,7 +131,7 @@ class TimeSeriesPlotWithCheckGroup( object ):
 	s_col_time = name of the column with the time values 
 	s_col_values = name of the column with values to plot
 	s_col_labels = name of the column with labels used by the CheckGroup for subsetting
-	params = dictionary with width/height/title of the plot
+	params = dictionary with width/height/title/legend of the plot
 	b_yyyymmdd_to_time = True when the time column appears with format yyyymmdd	
 	"""
 
@@ -187,7 +187,11 @@ class TimeSeriesPlotWithCheckGroup( object ):
 		o_source = ColumnDataSource(data = {'x': l_time, 'y': l_values, 'labels':l_labels, 'mypal':l_colors[0:len(l_values)]})		
 		TOOLTIPS = [("item", "@labels"), ("value", "$y")]		
 		o_wdg_plot = figure(width = self.params['width'], height = self.params['height'], x_axis_type = 'datetime', y_axis_type = 'linear', tooltips = TOOLTIPS, toolbar_location = None, title = self.params['title'])			
-		o_wdg_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal', legend = 'labels')
+
+		if self.params['legend'] == True:
+			o_wdg_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal', legend = 'labels')
+		else:
+			o_wdg_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal')
 
 		########## create widget checkbox 
 
@@ -208,7 +212,7 @@ class TimeSeriesPlotWithDropDown( object ):
 	s_col_time = name of the column with the time values 
 	s_col_values = name of the column with values to plot
 	s_col_labels = name of the column with labels used by the CheckGroup for subsetting
-	params = dictionary with width/height/title/default value of the plot
+	params = dictionary with width/height/title/default/percentage value of the plot
 	b_yyyymmdd_to_time = True when the time column appears with format yyyymmdd	
 	"""
 
@@ -243,6 +247,9 @@ class TimeSeriesPlotWithDropDown( object ):
 		o_plot.line(x=self.s_col_time, y=self.s_col_values, source=o_source)
 		o_plot.ygrid.grid_line_color = None
 
+		if self.params['percentage'] == True:
+			o_plot.yaxis[0].formatter = NumeralTickFormatter(format="0.0%")
+
 		########## create dropdown
 
 		l_labels = list(self.df_data[self.s_col_labels].unique()) 		
@@ -262,7 +269,7 @@ class TimeSeriesPlot( object ):
 	s_col_time = name of the column with the time values 
 	s_col_values = name of the column with values to plot
 	s_col_labels = name of the column with the labels 	
-	params = dictionary with width/height/title of the plot
+	params = dictionary with width/height/title/percentage of the plot
 	b_yyyymmdd_to_time = True when the time column appears with format yyyymmdd	
 	"""
 
@@ -310,11 +317,15 @@ class TimeSeriesPlot( object ):
 
 		o_source = ColumnDataSource(data = {'x': l_time, 'y': l_values, 'labels':l_labels, 'mypal':l_colors[0:len(l_values)]})		
 		TOOLTIPS = [("item", "@labels"), ("value", "$y")]		
-		o_wdg_plot = figure(width = self.params['width'], height = self.params['height'], x_axis_type = 'datetime', y_axis_type = 'linear', tooltips = TOOLTIPS, toolbar_location = None, title = self.params['title'])			
-		o_wdg_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal')#, legend = 'labels')
-		o_wdg_plot.ygrid.grid_line_color = None
-		
-		return o_wdg_plot
+		o_plot = figure(width = self.params['width'], height = self.params['height'], x_axis_type = 'datetime', y_axis_type = 'linear', tooltips = TOOLTIPS, toolbar_location = None, title = self.params['title'])			
+		o_plot.multi_line('x', 'y', source = o_source, line_width = 2, line_color = 'mypal')#, legend = 'labels')
+		o_plot.ygrid.grid_line_color = None
+
+		if self.params['percentage'] == True:
+			o_plot.yaxis[0].formatter = NumeralTickFormatter(format="0.0%")
+
+
+		return o_plot
 
 # ======================================================================
 # PIE CHART (AND NOTHING ELSE)
@@ -652,7 +663,7 @@ class MultiBarPlotWithDropDown( object ):
 	l_label_cols = list with the name of the 2 columns to be used as labels of the multibar plot 
 	s_col_values = name of the column with values 	
 	s_col_filter = name of the column with dropdown filter
-	params = dictionary with width/height/barwidth/title/default of the bar chart
+	params = dictionary with width/height/barwidth/title/default/axis_start/axis_end of the bar chart
 	b_vbar = True for vertical bars and False for horizontal bars
 	"""
 
@@ -725,8 +736,8 @@ class MultiBarPlotWithDropDown( object ):
 			o_plot = figure(x_range = FactorRange(*x), plot_height = self.params['height'], plot_width = self.params['width'], title = self.params['title'], toolbar_location = None, tooltips = TOOLTIPS)
 			o_plot.vbar(x = 'x', top = 'count', width = self.params['barwidth'], color = 'colors', source = o_source)
 
-			o_plot.y_range.start = 0
-			o_plot.y_range.end = 1
+			o_plot.y_range.start = self.params['axis_start']
+			o_plot.y_range.end = self.params['axis_end']
 			o_plot.x_range.range_padding = 0.1
 			o_plot.xaxis.major_label_orientation = 1		
 			o_plot.xgrid.grid_line_color = None
@@ -737,8 +748,8 @@ class MultiBarPlotWithDropDown( object ):
 			o_plot = figure(y_range = FactorRange(*x), plot_width = self.params['width'], plot_height = self.params['height'], toolbar_location = None, title = self.params['title'], tooltips = TOOLTIPS)
 			o_plot.hbar(y = 'x', right = 'count', height = self.params['barwidth'], color = 'colors', source = o_source)	
 
-			o_plot.x_range.start = 0		
-			o_plot.x_range.end = 1
+			o_plot.x_range.start = self.params['axis_start']		
+			o_plot.x_range.end = self.params['axis_end']
 			o_plot.ygrid.grid_line_color = None			
 			o_plot.xaxis[0].formatter = NumeralTickFormatter(format="0%")
 
