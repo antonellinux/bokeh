@@ -7,7 +7,7 @@ import pandas as pd
 from bokeh.io import curdoc
 from bokeh.client import push_session
 from bokeh.models import ColumnDataSource, Panel, HoverTool, NumeralTickFormatter, CustomJS
-from bokeh.models.widgets import TableColumn, DataTable, CheckboxGroup, Tabs, Select, Button, Div
+from bokeh.models.widgets import TableColumn, DataTable, CheckboxGroup, Tabs, Select, Button, Div, NumberFormatter
 from bokeh.plotting import figure
 from bokeh.palettes import Category20, Category20b, Category20c
 from bokeh.layouts import column, row
@@ -80,7 +80,7 @@ class TableWithDropDown( object ):
 	"""
 	df_data = data frame with the data to be used for the table object	
 	s_col_dd = colum of the data table to use for subsetting when the DropDown changes
-	params = dictionary with width/height of the table
+	params = dictionary with width/height/default/columns/formats of the table
 	"""
 
 	def __init__( self, df_data, s_col_dd, params ):
@@ -106,10 +106,21 @@ class TableWithDropDown( object ):
 		########## list with values
 
 		l_dd_values = list(self.df_data[self.s_col_dd].unique())		
-
+		
 		########## create widget table
+		
+		o_cols = []
 
-		o_cols = [TableColumn(field = i, title = i) for i in self.df_data.columns]				
+		for i,col in enumerate(self.params['columns']):
+
+			form = self.params['formats'][i]
+
+			if form  == 'na':
+				o_cols.append(TableColumn(field = col, title = col))
+			else:
+				o_cols.append(TableColumn(field = col, title = col, formatter = NumberFormatter(format = form)))	
+		
+
 		o_source = self.create_data_points(self.params['default'])
 		o_table = DataTable(source = o_source, columns = o_cols, width = self.params['width'], height = self.params['height'])
 
@@ -553,8 +564,8 @@ class BarPlotWithDropDown( object ):
 			o_plot.vbar(x = 'labels', top = 'values', width = self.params['barwidth'], color = 'colors', source = o_source)				
 			o_plot.yaxis[0].formatter = NumeralTickFormatter(format="0%")
 
-			o_plot.y_range.start = 0
-			o_plot.y_range.end = 1						
+			o_plot.y_range.start = self.df_data[self.s_col_values].min()
+			o_plot.y_range.end = self.df_data[self.s_col_values].max()						
 			o_plot.xgrid.grid_line_color = None
 			o_plot.yaxis[0].formatter = NumeralTickFormatter(format="0%")
 
@@ -563,8 +574,8 @@ class BarPlotWithDropDown( object ):
 			o_plot = figure(y_range = l_all_labels, plot_width = self.params['width'], plot_height = self.params['height'], toolbar_location = None, title = self.params['title'], tooltips = TOOLTIPS)
 			o_plot.hbar(y = 'labels', right = 'values', height = self.params['barwidth'], color = 'colors', source = o_source)		
 
-			o_plot.x_range.start = 0		
-			o_plot.x_range.end = 1
+			o_plot.x_range.start = self.df_data[self.s_col_values].min()		
+			o_plot.x_range.end = self.df_data[self.s_col_values].max()
 			o_plot.ygrid.grid_line_color = None			
 			o_plot.xaxis[0].formatter = NumeralTickFormatter(format="0%")		
 
